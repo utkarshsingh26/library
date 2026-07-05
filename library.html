@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Utkarsh Singh | Library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-alt:#F6F5F0;
+    --ink:#14171F;
+    --gold:#C9A227;
+    --gold-text:#8A6B18;
+    --teal:#2FB6A5;
+    --text-lo:#6B7280;
+    --maxw: 1180px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{ background:var(--ink); color:#ECE4D3; font-family:'Inter',sans-serif; line-height:1.5; }
+  a{ color:inherit; text-decoration:none; }
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:0 32px; }
+  h1,h2,h3{ font-family:'Fraunces',serif; font-weight:600; letter-spacing:-0.01em; }
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.14em;
+    text-transform:uppercase; color:var(--gold); display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{ content:''; width:18px; height:1px; background:var(--gold); }
+
+  .topbar{ padding:24px 0; }
+  .back-link{ font-family:'JetBrains Mono',monospace; font-size:12px; color:#9BA3B4; transition:color .2s; }
+  .back-link:hover{ color:var(--gold); }
+
+  .library-hero{ padding:24px 0 56px; }
+  .library-hero h1{ font-size:clamp(38px,5vw,58px); line-height:1.05; color:#fff; margin:18px 0 16px; }
+  .library-hero p{ font-size:16px; color:#9BA3B4; max-width:520px; }
+
+  main{ padding-bottom:100px; }
+  .shelf{ margin-bottom:56px; }
+  .shelf__header{ display:flex; align-items:baseline; gap:14px; margin-bottom:24px; }
+  .shelf__label{ font-family:'JetBrains Mono',monospace; font-size:12.5px; letter-spacing:0.1em; text-transform:uppercase; color:var(--teal); white-space:nowrap; }
+  .shelf__count{ font-family:'JetBrains Mono',monospace; font-size:11px; color:#6B7280; }
+  .shelf__rule{ flex:1; height:1px; background:rgba(236,228,211,0.14); }
+
+  .grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(160px, 1fr)); gap:24px; }
+  .tile{ position:relative; cursor:pointer; aspect-ratio:2/3; border-radius:3px; overflow:hidden; background:#1e2340; box-shadow:0 18px 36px -20px rgba(0,0,0,0.6); }
+  .tile img{ width:100%; height:100%; object-fit:cover; display:block; transition:transform .4s ease, filter .4s ease; }
+  .tile:hover img{ transform:scale(1.04); filter:brightness(0.5); }
+  .tile__fold{ position:absolute; bottom:0; right:0; width:0; height:0; border-style:solid; border-color:transparent transparent var(--gold) transparent; filter:drop-shadow(-1px -1px 2px rgba(0,0,0,0.4)); pointer-events:none; }
+  .tile__status{ position:absolute; top:8px; left:8px; font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:0.08em; text-transform:uppercase; background:var(--teal); color:#0c1a19; padding:2px 6px; border-radius:2px; }
+  .tile__overlay{ position:absolute; inset:0; display:flex; flex-direction:column; justify-content:flex-end; padding:14px; opacity:0; transform:translateY(6px); transition:opacity .3s ease, transform .3s ease; background:linear-gradient(to top, rgba(10,12,20,0.9), transparent 60%); }
+  .tile:hover .tile__overlay{ opacity:1; transform:none; }
+  .tile__title{ font-family:'Fraunces',serif; font-size:17px; line-height:1.2; color:#fff; }
+  .tile__author{ font-family:'JetBrains Mono',monospace; font-size:10.5px; opacity:0.7; margin-top:4px; }
+
+  .backdrop{ position:fixed; inset:0; background:rgba(10,12,24,0.8); backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; padding:24px; z-index:80; }
+  .modal{ background:var(--bg-alt); color:var(--ink); max-width:640px; width:100%; border-radius:4px; padding:32px; display:flex; gap:24px; position:relative; max-height:85vh; overflow-y:auto; }
+  .modal img{ width:150px; flex-shrink:0; border-radius:2px; box-shadow:0 8px 24px rgba(0,0,0,0.25); }
+  .modal__title{ font-family:'Fraunces',serif; font-size:27px; margin-bottom:4px; }
+  .modal__author{ font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--text-lo); margin-bottom:16px; }
+  .modal__thoughts{ font-size:16px; line-height:1.55; }
+  .modal__close{ position:absolute; top:14px; right:16px; background:none; border:none; font-size:16px; cursor:pointer; opacity:0.5; color:var(--ink); }
+  .modal__close:hover{ opacity:1; }
+
+  .empty-note{ font-family:'JetBrains Mono',monospace; font-size:13px; color:#6B7280; }
+
+  @media (max-width:600px){
+    .wrap{ padding:0 20px; }
+    .grid{ grid-template-columns:repeat(auto-fill, minmax(120px, 1fr)); gap:16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar wrap">
+  <a class="back-link" href="index.html">← Back to portfolio</a>
+</div>
+
+<section class="library-hero wrap">
+  <div class="eyebrow">The Library</div>
+  <h1>What I've Read</h1>
+  <p>Every dog-ear is a rating I gave it myself — the bigger the fold, the more I loved it. Click any cover for my thoughts.</p>
+</section>
+
+<main class="wrap">
+  <div id="shelves"></div>
+</main>
+
+<div id="modal-root"></div>
+
+<script>
+  // ---------------- Sample data ----------------
+  // Add a books.json next to this file (same shape as below) and it's
+  // used automatically instead. Shelves are whatever "shelf" values
+  // show up in the data — Cosmere, Dungeon Crawler Carl, Harry Potter,
+  // Sci-Fi, whatever you want. No fixed list to maintain.
+  const SAMPLE_BOOKS = [
+    { title: "Mistborn: The Final Empire", author: "Brandon Sanderson", shelf: "Cosmere", rating: 5,
+      cover: "https://images.weserv.nl/?url=covers.openlibrary.org/b/isbn/9780765311788-L.jpg",
+      thoughts: "The magic system alone would carry a weaker book. Vin's arc is what makes it great." },
+    { title: "The Way of Kings", author: "Brandon Sanderson", shelf: "Cosmere", rating: 0, status: "reading",
+      cover: "https://mpd-biblio-covers.imgix.net/9780765376671.jpg?w=900&dpr=2",
+      thoughts: "pg. 405 / 1000 — the flashback structure is doing a lot of work early on." },
+    { title: "Dungeon Crawler Carl", author: "Matt Dinniman", shelf: "Dungeon Crawler Carl Series", rating: 5,
+      cover: "https://images.weserv.nl/?url=covers.openlibrary.org/b/isbn/9781638730001-L.jpg",
+      thoughts: "Absurd premise, surprisingly sharp satire underneath it. Couldn't put it down." },
+    { title: "Harry Potter and the Sorcerer's Stone", author: "J.K. Rowling", shelf: "Harry Potter", rating: 4,
+      cover: "https://images.weserv.nl/?url=covers.openlibrary.org/b/isbn/9780590353427-L.jpg",
+      thoughts: "Still holds up as a comfort reread." },
+    { title: "Project Hail Mary", author: "Andy Weir", shelf: "Sci-Fi", rating: 5,
+      cover: "https://images.weserv.nl/?url=covers.openlibrary.org/b/isbn/9780593135204-L.jpg",
+      thoughts: "The friendship at the center of this book snuck up on me." },
+    { title: "Norwegian Wood", author: "Haruki Murakami", shelf: "Others", rating: 4,
+      cover: "https://images.weserv.nl/?url=covers.openlibrary.org/b/isbn/9780375704024-L.jpg",
+      thoughts: "Quiet and melancholy in a way that stuck with me for weeks." }
+  ];
+
+  const shelvesRoot = document.getElementById('shelves');
+  const modalRoot = document.getElementById('modal-root');
+
+  function groupByShelf(books){
+    const groups = {};
+    books.forEach(b=>{
+      const shelf = (b.shelf || 'Others').trim();
+      (groups[shelf] = groups[shelf] || []).push(b);
+    });
+    return groups;
+  }
+  // "Currently reading" books float to the top of their shelf; shelves
+  // themselves appear in the order they're first seen in the data, so
+  // you control ordering just by how you arrange books.json.
+  function orderedShelfNames(groups){
+    return Object.keys(groups);
+  }
+  function foldSize(rating){
+    const sizes = {0:0,1:12,2:18,3:24,4:30,5:38};
+    return sizes[rating] ?? 0;
+  }
+  function renderTile(book){
+    const tile = document.createElement('div');
+    tile.className = 'tile';
+    tile.tabIndex = 0;
+    tile.setAttribute('role','button');
+    tile.setAttribute('aria-label', `${book.title} by ${book.author}`);
+    const fold = foldSize(book.rating);
+    tile.innerHTML = `
+      <img src="${book.cover || 'https://placehold.co/240x360?text=No+Cover'}" alt="${book.title} cover" loading="lazy" />
+      ${book.status === 'reading' ? `<span class="tile__status">Reading</span>` : ''}
+      ${fold > 0 ? `<span class="tile__fold" style="border-width:0 0 ${fold}px ${fold}px;"></span>` : ''}
+      <div class="tile__overlay">
+        <p class="tile__title">${book.title}</p>
+        <p class="tile__author">${book.author}</p>
+      </div>
+    `;
+    const open = ()=> openModal(book);
+    tile.addEventListener('click', open);
+    tile.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' ') open(); });
+    return tile;
+  }
+  function renderShelf(name, books){
+    const shelf = document.createElement('div');
+    shelf.className = 'shelf';
+    shelf.innerHTML = `
+      <div class="shelf__header">
+        <span class="shelf__label">${name}</span>
+        <span class="shelf__count">${books.length}</span>
+        <span class="shelf__rule"></span>
+      </div>
+    `;
+    const grid = document.createElement('div');
+    grid.className = 'grid';
+    books.slice()
+      .sort((a,b)=>{
+        if(a.status==='reading' && b.status!=='reading') return -1;
+        if(b.status==='reading' && a.status!=='reading') return 1;
+        return new Date(b.dateAdded||0) - new Date(a.dateAdded||0);
+      })
+      .forEach(b=> grid.appendChild(renderTile(b)));
+    shelf.appendChild(grid);
+    return shelf;
+  }
+  function render(books){
+    shelvesRoot.innerHTML = '';
+    if(!books || !books.length){
+      shelvesRoot.innerHTML = `<p class="empty-note">No books yet — add some to books.json.</p>`;
+      return;
+    }
+    const groups = groupByShelf(books);
+    orderedShelfNames(groups).forEach(name=>{
+      shelvesRoot.appendChild(renderShelf(name, groups[name]));
+    });
+  }
+  function openModal(book){
+    const backdrop = document.createElement('div');
+    backdrop.className = 'backdrop';
+    backdrop.innerHTML = `
+      <div class="modal">
+        <button class="modal__close" aria-label="Close">✕</button>
+        <img src="${book.cover || 'https://placehold.co/240x360?text=No+Cover'}" alt="${book.title} cover" />
+        <div>
+          <p class="modal__title">${book.title}</p>
+          <p class="modal__author">${book.author}${book.publishedDate ? ` · ${book.publishedDate}` : ''}</p>
+          <p class="modal__thoughts">${book.thoughts ? book.thoughts : 'No notes yet.'}</p>
+        </div>
+      </div>
+    `;
+    const close = ()=> backdrop.remove();
+    backdrop.addEventListener('click', e=>{ if(e.target===backdrop) close(); });
+    backdrop.querySelector('.modal__close').addEventListener('click', close);
+    document.addEventListener('keydown', function onEsc(e){
+      if(e.key==='Escape'){ close(); document.removeEventListener('keydown', onEsc); }
+    });
+    modalRoot.appendChild(backdrop);
+  }
+
+  fetch('./books.json')
+    .then(res=>{ if(!res.ok) throw new Error('no books.json'); return res.json(); })
+    .then(render)
+    .catch(()=> render(SAMPLE_BOOKS));
+</script>
+
+</body>
+</html>
